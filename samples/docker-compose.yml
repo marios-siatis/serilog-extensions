@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  
+  sample-worker-function:
+    build:
+      context: ../samples/MariosSiati.StructuredLogging.FunctionWorkerSample
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "7071:80"
+    environment:
+      - AZURE_STORAGE_QUEUE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;
+      - AZURE_FUNCTIONS_ENVIRONMENT=Development
+      - FUNCTIONS_WORKER_RUNTIME=dotnet-isolated
+      - Seq__ServerUrl=http://seq:5341
+      - Seq__ApiKey=1234567890
+      - Seq__MinimumLevel=Trace
+      - Seq__LevelOverride__Microsoft=Debug
+    depends_on:
+      - seq
+    networks:
+      - localdev
+  
+  sample-web-app:
+   image: mcr.microsoft.com/dotnet/core/samples:aspnetapp
+   build:
+    context: ../samples/MariosSiati.StructuredLogging.WebAppSample
+    dockerfile: Dockerfile
+   ports:
+      - 80
+      - 443
+   environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+   volumes:
+      - ~/.aspnet/https:/https:ro
+
+  seq:
+    image: datalust/seq
+    container_name: seq-backend
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"
+    networks:
+      - localdev
+
+volumes:
+  mssqlvolume: null
+
+networks:
+  localdev:
+    driver: bridge
