@@ -4,7 +4,7 @@ Replaces normal Microsoft Extensions Logging (MEL) with Serilog.
 
 ### Usage
 
-Use the following extension method on ICollectionService on Program Startup:
+Use the following extension method on IServiceCollection on app Startup:
 
 ```C#
 UseSerilog(applicationName)
