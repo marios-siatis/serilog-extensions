@@ -2,6 +2,8 @@
 
 Replaces normal Microsoft Extensions Logging (MEL) with Serilog.
 
+https://www.nuget.org/packages/MariosSiati.StructuredLogging.Core/
+
 ### Usage
 
 Use the following extension method on IServiceCollection on app Startup:
