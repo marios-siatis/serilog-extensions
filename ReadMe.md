@@ -1,4 +1,4 @@
-# Serilog & SEQ Wrapper 
+# 🪵 Serilog & SEQ Wrapper 
 
 This package is useful in cases where the project is already existing and we don't want refactor each and every file to use serilog instead of MEL logger
 - Sets up structure logging by replacing normal Microsoft Extensions Logging (MEL) with Serilog.
