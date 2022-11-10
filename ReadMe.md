@@ -1,6 +1,10 @@
 # Serilog & SEQ Wrapper 
 
-Replaces normal Microsoft Extensions Logging (MEL) with Serilog.
+This package is useful in cases where the project is already existing and we don't want refactor each and every file to use serilog instead of MEL logger
+- Sets up structure logging by replacing normal Microsoft Extensions Logging (MEL) with Serilog.
+- Enriches the log context with the Application Name. Useful when working locally with multiple services.
+- Writes logs to Applications Insights 
+- Writes logs local SEQ instance. 
 
 https://www.nuget.org/packages/MariosSiati.StructuredLogging.Core/
 
