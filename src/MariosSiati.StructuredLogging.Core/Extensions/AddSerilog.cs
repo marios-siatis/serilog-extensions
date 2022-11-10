@@ -61,9 +61,9 @@ public static class AddSerilog
             .WriteTo.Console();
 
 #if DEBUG
-        var config = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
-        var seqOptions =
-            config.GetSection(nameof(Seq));
+        var sp = services.BuildServiceProvider();
+        var config = sp.GetRequiredService<IConfiguration>();
+        var seqOptions = config.GetSection(nameof(Seq));
 
         services.AddOptions<Seq>().BindConfiguration(nameof(Seq))
             .ValidateDataAnnotations();
@@ -73,7 +73,7 @@ public static class AddSerilog
 
 #endif
         Log.Logger = loggerConfiguration.CreateLogger();
-        
+
         services.AddLogging(logging =>
         {
             logging.ClearProviders();

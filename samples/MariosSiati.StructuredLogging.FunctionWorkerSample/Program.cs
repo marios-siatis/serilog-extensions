@@ -1,6 +1,7 @@
 using MariosSiati.StructuredLogging.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace MariosSiati.StructuredLogging.FunctionWorkerSample
 {
@@ -18,7 +19,15 @@ namespace MariosSiati.StructuredLogging.FunctionWorkerSample
 
         private static void RegisterDependencies(IServiceCollection serviceCollection)
         {
-            serviceCollection.UseSerilog("SampleFunctionWorker");
+            serviceCollection.UseSerilog(applicationName:"SampleFunctionWorker");
+            var sp = serviceCollection.BuildServiceProvider();
+            var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+            const string categoryName = "Any";
+            var logger = loggerFactory.CreateLogger(categoryName);
+            logger.LogDebug("Debug");
+            logger.LogInformation("Information");
+            logger.LogWarning("Warning");
+            logger.LogError("Error");
         }
     }
 }
