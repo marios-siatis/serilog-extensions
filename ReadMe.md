@@ -11,7 +11,16 @@ UseSerilog(applicationName)
 ```
 
 #### AppSettings
-
+```json
+"seq": {
+    "ServerUrl": "http://localhost:5341",
+    "ApiKey": "1234567890",
+    "MinimumLevel": "Trace",
+    "LevelOverride": {
+      "Microsoft": "Debug"
+    }
+  }
+````
 ### Samples
 
 WebApp Logging:
