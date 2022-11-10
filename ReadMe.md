@@ -1,6 +1,8 @@
 # 🪵 Serilog & SEQ Wrapper 
 
-This package is useful in cases where the project is already existing and we don't want refactor each and every file to use serilog instead of MEL logger
+This package is offer an easy setup of serilog, with just a single line of code.
+It is also useful in existing projects, where it would be an overhead to refactor each and every file to use serilog instead of MEL logger
+
 - Sets up structure logging by replacing normal Microsoft Extensions Logging (MEL) with Serilog.
 - Enriches the log context with the Application Name. Useful when working locally with multiple services.
 - Writes logs to Applications Insights 
