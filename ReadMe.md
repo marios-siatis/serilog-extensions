@@ -9,7 +9,7 @@ It is also useful in existing projects, where it would be an overhead to refacto
 - Writes logs to Applications Insights 
 - Writes logs to local SEQ instance for debugging. 
 
-The inspiration behind this package was the lack of structured logging support in Azure Functions V4 from MEL (especially logging custom properties in the log context)
+The inspiration behind this package was the lack of structured logging support in Azure Functions V4 from MEL (especially logging custom properties in the log context) [more here](https://medium.com/@marios.shiatis/addressing-the-structured-logging-application-insights-issues-in-azure-functions-v4-net-6-0-f1f63b99807d)
 
 https://www.nuget.org/packages/MariosSiati.StructuredLogging.Core/
 
