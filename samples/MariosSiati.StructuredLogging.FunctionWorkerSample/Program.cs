@@ -19,7 +19,7 @@ namespace MariosSiati.StructuredLogging.FunctionWorkerSample
 
         private static void RegisterDependencies(IServiceCollection serviceCollection)
         {
-            serviceCollection.UseSerilog(applicationName:"SampleFunctionWorker");
+            serviceCollection.UseSerilog(applicationName:"SampleFunctionWorker", useApplicationInsights:true);
             var sp = serviceCollection.BuildServiceProvider();
             var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             const string categoryName = "Any";

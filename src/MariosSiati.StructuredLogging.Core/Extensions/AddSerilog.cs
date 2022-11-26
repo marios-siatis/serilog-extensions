@@ -49,29 +49,36 @@ public static class AddSerilog
         return builder;
     }
 
-    public static IServiceCollection UseSerilog(this IServiceCollection services, string applicationName)
+    public static IServiceCollection UseSerilog(this IServiceCollection services,
+        string applicationName,
+        bool useApplicationInsights = false,
+        bool useLocalSeq = true,
+        string correlationIdHeaderKey = "x-correlation-id")
     {
-        var telemetryConfiguration = TelemetryConfiguration.CreateDefault();
-        var client = new TelemetryClient(telemetryConfiguration);
+        var sp = services.BuildServiceProvider();
+        var config = sp.GetRequiredService<IConfiguration>();
 
         var loggerConfiguration = new LoggerConfiguration()
             .MinimumLevel.Verbose()
-            .WriteTo.ApplicationInsights(client, TelemetryConverter.Traces)
             .Enrich.WithProperty("ApplicationName", applicationName)
-            .WriteTo.Console();
+            .Enrich.FromLogContext()
+            .Enrich.WithCorrelationIdHeader(correlationIdHeaderKey)
+            .Enrich.WithCorrelationId()
+            .WriteTo.Console()
+            .ReadFrom.Configuration(config);
 
-#if DEBUG
-        var sp = services.BuildServiceProvider();
-        var config = sp.GetRequiredService<IConfiguration>();
-        var seqOptions = config.GetSection(nameof(Seq));
+        if (useApplicationInsights)
+        {
+            var telemetryConfiguration = TelemetryConfiguration.CreateDefault();
+            var client = new TelemetryClient(telemetryConfiguration);
+            loggerConfiguration.WriteTo.ApplicationInsights(client, TelemetryConverter.Traces);
+        }
 
-        services.AddOptions<Seq>().BindConfiguration(nameof(Seq))
-            .ValidateDataAnnotations();
+        if (useLocalSeq)
+        {
+            services.UseLocalSeq(config, loggerConfiguration);
+        }
 
-        var seq = seqOptions.Get<Seq>();
-        loggerConfiguration.WriteTo.Seq(seq.ServerUrl);
-
-#endif
         Log.Logger = loggerConfiguration.CreateLogger();
 
         services.AddLogging(logging =>
@@ -81,6 +88,19 @@ public static class AddSerilog
         });
 
         return services;
+    }
+
+    private static void UseLocalSeq(this IServiceCollection services, IConfiguration config, LoggerConfiguration loggerConfiguration)
+    {
+#if DEBUG
+        var seqOptions = config.GetSection(nameof(Seq));
+
+        services.AddOptions<Seq>().BindConfiguration(nameof(Seq))
+            .ValidateDataAnnotations();
+
+        var seq = seqOptions.Get<Seq>();
+        loggerConfiguration.WriteTo.Seq(seq.ServerUrl);
+#endif
     }
 }
 
