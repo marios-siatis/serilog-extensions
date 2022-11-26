@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Formatting.Json;
+using Serilog.Templates;
+using Serilog.Templates.Themes;
 
 namespace MariosSiati.StructuredLogging.Core.Extensions;
 
@@ -27,7 +30,9 @@ public static class AddSerilog
             .Enrich.FromLogContext()
             .Enrich.WithCorrelationIdHeader(correlationIdHeaderKey)
             .Enrich.WithCorrelationId()
-            .WriteTo.Console()
+            .Enrich.WithEnvironmentName()
+            .Enrich.WithMachineName()
+            .WriteTo.Console(new ExpressionTemplate("{ {@t, message: @m, @mt, level:@l, @x, ..@p} }\n", theme: TemplateTheme.Code))
             .ReadFrom.Configuration(config);
 
         if (useApplicationInsights)
